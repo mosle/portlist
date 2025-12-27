@@ -22,7 +22,10 @@
     "process",
     "manager"
   ],
-  "author": "Yosuke Yasuda",
+  "author": {
+    "name": "Yosuke Yasuda",
+    "email": "yskysd@gmail.com"
+  },
   "license": "MIT",
   "packageManager": "pnpm@10.20.0",
   "devDependencies": {
