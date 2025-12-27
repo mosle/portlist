@@ -38,6 +38,7 @@ async function init(): Promise<void> {
     sortColumn: settings.sortColumn,
     sortDirection: settings.sortDirection,
     isPinned: settings.alwaysOnTop,
+    filterText: settings.filterText,
   };
 
   // Register for port updates
@@ -189,6 +190,9 @@ async function handleUpdateSettings(newSettings: Partial<ISettings>): Promise<vo
 function handleFilterChange(text: string): void {
   state = { ...state, filterText: text };
   render();
+
+  // Save filter text (debounced via the settings update mechanism)
+  window.electronAPI.updateSettings({ filterText: text });
 }
 
 /**

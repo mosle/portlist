@@ -44,6 +44,8 @@ export function createSettingsStore(
       alwaysOnTop: store.get('alwaysOnTop', DEFAULT_SETTINGS.alwaysOnTop),
       sortColumn: store.get('sortColumn', DEFAULT_SETTINGS.sortColumn),
       sortDirection: store.get('sortDirection', DEFAULT_SETTINGS.sortDirection),
+      filterText: store.get('filterText', DEFAULT_SETTINGS.filterText),
+      windowBounds: store.get('windowBounds', DEFAULT_SETTINGS.windowBounds),
     };
   }
 

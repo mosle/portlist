@@ -7,9 +7,10 @@
   "scripts": {
     "build:preload": "esbuild src/preload/index.ts --bundle --outfile=dist/preload/index.js --format=cjs --platform=node --external:electron",
     "build:renderer": "esbuild src/renderer/index.ts --bundle --outfile=dist/renderer/index.js --format=iife --platform=browser --target=chrome120",
+    "build:icons": "chmod +x scripts/generate-icons.sh && ./scripts/generate-icons.sh",
     "copy-assets": "mkdir -p dist/renderer/styles && cp src/renderer/index.html dist/renderer/ && cp src/renderer/styles/main.css dist/renderer/styles/",
     "dev": "tsc && npm run build:preload && npm run build:renderer && npm run copy-assets && electron .",
-    "build": "tsc && npm run build:preload && npm run build:renderer && npm run copy-assets",
+    "build": "tsc && npm run build:icons && npm run build:preload && npm run build:renderer && npm run copy-assets",
     "test": "vitest run",
     "test:watch": "vitest",
     "start": "electron .",
@@ -41,8 +42,9 @@
     ]
   },
   "build": {
-    "appId": "com.portlist.viewer",
-    "productName": "Port List Viewer",
+    "appId": "com.mosless.portlist",
+    "productName": "portlist",
+    "icon": "build/icon.icns",
     "directories": {
       "output": "release"
     },
@@ -54,11 +56,17 @@
       "target": [
         {
           "target": "dmg",
-          "arch": ["x64", "arm64"]
+          "arch": [
+            "x64",
+            "arm64"
+          ]
         },
         {
           "target": "zip",
-          "arch": ["x64", "arm64"]
+          "arch": [
+            "x64",
+            "arm64"
+          ]
         }
       ],
       "category": "public.app-category.developer-tools"
@@ -67,11 +75,15 @@
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         },
         {
           "target": "zip",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ]
     },
@@ -79,11 +91,15 @@
       "target": [
         {
           "target": "AppImage",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         },
         {
           "target": "deb",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "category": "Development"

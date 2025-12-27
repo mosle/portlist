@@ -17,6 +17,16 @@ export interface IPortInfo {
 export type SortColumn = 'port' | 'directory' | 'command' | 'pid' | 'parent';
 
 /**
+ * Window bounds
+ */
+export interface IWindowBounds {
+  x?: number;
+  y?: number;
+  width: number;
+  height: number;
+}
+
+/**
  * Application settings
  */
 export interface ISettings {
@@ -24,6 +34,8 @@ export interface ISettings {
   alwaysOnTop: boolean;
   sortColumn: SortColumn;
   sortDirection: 'asc' | 'desc';
+  filterText: string;
+  windowBounds: IWindowBounds;
 }
 
 /**

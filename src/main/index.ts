@@ -6,8 +6,11 @@ import { createPortScanner } from './services/port-scanner.js';
 import { createProcessManager } from './services/process-manager.js';
 import { createSettingsStore, type StoreInterface } from './services/settings-store.js';
 import { createPollingManager } from './services/polling-manager.js';
-import { DEFAULT_SETTINGS } from '../shared/constants.js';
+import { DEFAULT_SETTINGS, APP_NAME } from '../shared/constants.js';
 import type { ISettings } from '../shared/types.js';
+
+// Set app name (for macOS menu bar)
+app.name = APP_NAME;
 
 // Initialize services
 const portScanner = createPortScanner();
@@ -19,8 +22,19 @@ const store = new Store<ISettings>({
   schema: {
     pollingInterval: { type: 'number', minimum: 1000, maximum: 60000 },
     alwaysOnTop: { type: 'boolean' },
-    sortColumn: { type: 'string', enum: ['port', 'directory', 'command', 'pid'] },
+    sortColumn: { type: 'string', enum: ['port', 'directory', 'command', 'pid', 'parent'] },
     sortDirection: { type: 'string', enum: ['asc', 'desc'] },
+    filterText: { type: 'string' },
+    windowBounds: {
+      type: 'object',
+      properties: {
+        x: { type: 'number' },
+        y: { type: 'number' },
+        width: { type: 'number', minimum: 300 },
+        height: { type: 'number', minimum: 400 },
+      },
+      required: ['width', 'height'],
+    },
   },
 }) as unknown as StoreInterface<ISettings>;
 
@@ -56,14 +70,21 @@ registerIPCHandlers({
 
 app.whenReady().then(() => {
   const settings = settingsStore.getSettings();
-  mainWindowService.create(settings);
+
+  // Callback to save window bounds
+  const onBoundsChange = (bounds: import('../shared/types.js').IWindowBounds) => {
+    settingsStore.updateSettings({ windowBounds: bounds });
+  };
+
+  mainWindowService.create(settings, onBoundsChange);
 
   // Start polling
   pollingManager.start();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      mainWindowService.create(settings);
+      const currentSettings = settingsStore.getSettings();
+      mainWindowService.create(currentSettings, onBoundsChange);
     }
   });
 });
