@@ -48,17 +48,17 @@ jobs:
 
       - name: Build Electron app (macOS)
         if: matrix.platform == 'mac'
-        run: pnpm package --mac
+        run: pnpm package --mac --publish never
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false
 
       - name: Build Electron app (Windows)
         if: matrix.platform == 'win'
-        run: pnpm package --win
+        run: pnpm package --win --publish never
 
       - name: Build Electron app (Linux)
         if: matrix.platform == 'linux'
-        run: pnpm package --linux
+        run: pnpm package --linux --publish never
 
       - name: Upload macOS artifacts
         if: matrix.platform == 'mac'
