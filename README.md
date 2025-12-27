@@ -111,4 +111,4 @@ Uses `ss` (socket statistics) to list ports and `/proc` filesystem for process i
 
 ## License
 
-ISC
+MIT

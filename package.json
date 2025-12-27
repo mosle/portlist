@@ -22,8 +22,8 @@
     "process",
     "manager"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "Yosuke Yasuda",
+  "license": "MIT",
   "packageManager": "pnpm@10.20.0",
   "devDependencies": {
     "@types/node": "^20.17.12",
