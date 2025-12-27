@@ -1,6 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { createPortScanner, type ExecFunction } from '../../main/services/port-scanner.js';
 
+// Mock os.platform to always return 'darwin' for consistent testing
+vi.mock('node:os', () => ({
+  platform: () => 'darwin',
+}));
+
 describe('PortScanner', () => {
   let mockExec: ExecFunction;
 
