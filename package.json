@@ -7,8 +7,8 @@
   "scripts": {
     "build:preload": "esbuild src/preload/index.ts --bundle --outfile=dist/preload/index.js --format=cjs --platform=node --external:electron",
     "build:renderer": "esbuild src/renderer/index.ts --bundle --outfile=dist/renderer/index.js --format=iife --platform=browser --target=chrome120",
-    "build:icons": "chmod +x scripts/generate-icons.sh && ./scripts/generate-icons.sh",
-    "copy-assets": "mkdir -p dist/renderer/styles && cp src/renderer/index.html dist/renderer/ && cp src/renderer/styles/main.css dist/renderer/styles/",
+    "build:icons": "node scripts/generate-icons.js",
+    "copy-assets": "node scripts/copy-assets.js",
     "dev": "tsc && npm run build:preload && npm run build:renderer && npm run copy-assets && electron .",
     "build": "tsc && npm run build:icons && npm run build:preload && npm run build:renderer && npm run copy-assets",
     "test": "vitest run",
