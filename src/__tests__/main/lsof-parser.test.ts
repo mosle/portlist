@@ -168,6 +168,8 @@ node    12345   user  cwd    DIR    1,5      512 12345678 /Users/test/My Project
         command: 'node',
         directory: '/Users/test/project',
         protocol: 'TCP',
+        parentPid: 0,
+        parentCommand: '',
       });
       expect(result[1]).toEqual({
         pid: 23456,
@@ -175,6 +177,8 @@ node    12345   user  cwd    DIR    1,5      512 12345678 /Users/test/My Project
         command: 'python',
         directory: '/Users/test/another',
         protocol: 'TCP',
+        parentPid: 0,
+        parentCommand: '',
       });
     });
 

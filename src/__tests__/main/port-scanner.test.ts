@@ -22,9 +22,14 @@ python    23456   user   5u   IPv4 0x1234567890123458      0t0  TCP *:8080 (LIST
 node    12345   user  cwd    DIR    1,5      512 12345678 /Users/test/project
 python  23456   user  cwd    DIR    1,5      512 23456789 /Users/test/another`;
 
+      const psOutput = `12345 1 node /Users/test/project/server.js
+23456 1 python /Users/test/another/app.py`;
+
       mockExec = vi.fn()
         .mockResolvedValueOnce({ stdout: lsofPortOutput, stderr: '' })
-        .mockResolvedValueOnce({ stdout: lsofCwdOutput, stderr: '' });
+        .mockResolvedValueOnce({ stdout: lsofCwdOutput, stderr: '' })
+        .mockResolvedValueOnce({ stdout: psOutput, stderr: '' })
+        .mockResolvedValueOnce({ stdout: '', stderr: '' }); // parent commands (empty for ppid=1)
 
       const scanner = createPortScanner(mockExec);
       const result = await scanner.getPortList();
@@ -35,16 +40,20 @@ python  23456   user  cwd    DIR    1,5      512 23456789 /Users/test/another`;
         expect(result.data[0]).toEqual({
           pid: 12345,
           port: 3000,
-          command: 'node',
+          command: 'node /Users/test/project/server.js',
           directory: '/Users/test/project',
           protocol: 'TCP',
+          parentPid: 1,
+          parentCommand: '',
         });
         expect(result.data[1]).toEqual({
           pid: 23456,
           port: 8080,
-          command: 'python',
+          command: 'python /Users/test/another/app.py',
           directory: '/Users/test/another',
           protocol: 'TCP',
+          parentPid: 1,
+          parentCommand: '',
         });
       }
     });
@@ -110,14 +119,16 @@ python    23456   user   5u   IPv4 0x1234567890123458      0t0  TCP *:8080 (LIST
 
       mockExec = vi.fn()
         .mockResolvedValueOnce({ stdout: lsofPortOutput, stderr: '' })
-        .mockResolvedValueOnce({ stdout: '', stderr: '' });
+        .mockResolvedValueOnce({ stdout: '', stderr: '' }) // CWD
+        .mockResolvedValueOnce({ stdout: '', stderr: '' }) // ps process info
+        .mockResolvedValueOnce({ stdout: '', stderr: '' }); // ps parent commands
 
       const scanner = createPortScanner(mockExec);
       await scanner.getPortList();
 
-      expect(mockExec).toHaveBeenCalledTimes(2);
-      expect(mockExec).toHaveBeenNthCalledWith(
-        2,
+      // Should call: 1) lsof ports, 2) lsof cwd, 3) ps process info
+      // Parent command call (4th) may or may not happen depending on ppids
+      expect(mockExec).toHaveBeenCalledWith(
         expect.stringContaining('lsof -d cwd -a -p'),
         expect.any(Object)
       );
@@ -129,7 +140,9 @@ node      12345   user   23u  IPv4 0x1234567890123456      0t0  TCP *:3000 (LIST
 
       mockExec = vi.fn()
         .mockResolvedValueOnce({ stdout: lsofPortOutput, stderr: '' })
-        .mockRejectedValueOnce(new Error('CWD fetch failed'));
+        .mockRejectedValueOnce(new Error('CWD fetch failed'))
+        .mockResolvedValueOnce({ stdout: '', stderr: '' }) // ps process info
+        .mockResolvedValueOnce({ stdout: '', stderr: '' }); // ps parent commands
 
       const scanner = createPortScanner(mockExec);
       const result = await scanner.getPortList();
