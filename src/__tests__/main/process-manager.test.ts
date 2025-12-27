@@ -1,6 +1,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { createProcessManager, type KillFunction } from '../../main/services/process-manager.js';
 
+// Mock os.platform to always return 'darwin' for consistent testing
+// This ensures the Unix code path (with killFn) is used instead of Windows taskkill
+vi.mock('node:os', () => ({
+  platform: () => 'darwin',
+}));
+
 describe('ProcessManager', () => {
   let mockKill: KillFunction;
 
