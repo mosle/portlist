@@ -30,7 +30,7 @@
   "packageManager": "pnpm@10.20.0",
   "devDependencies": {
     "@types/node": "^20.17.12",
-    "electron": "^33.2.1",
+    "electron": "^35.7.5",
     "electron-builder": "^25.1.8",
     "esbuild": "^0.27.2",
     "typescript": "^5.7.2",
