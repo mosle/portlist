@@ -34,7 +34,7 @@
     "electron-builder": "^25.1.8",
     "esbuild": "^0.27.2",
     "typescript": "^5.7.2",
-    "vitest": "^2.1.8"
+    "vitest": "^3.2.6"
   },
   "dependencies": {
     "electron-store": "^10.0.0"
